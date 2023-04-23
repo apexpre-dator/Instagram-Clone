@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:instagram_clone/utils/global_variables.dart';
+import 'package:intl/intl.dart';
 
 class CommentCard extends StatefulWidget {
-  const CommentCard({super.key});
+  final snap;
+  const CommentCard({
+    super.key,
+    required this.snap,
+  });
 
   @override
   State<CommentCard> createState() => _CommentCardState();
@@ -19,12 +23,12 @@ class _CommentCardState extends State<CommentCard> {
       child: Row(
         children: [
           CircleAvatar(
-            backgroundImage: NetworkImage(demoUrl),
+            backgroundImage: NetworkImage(widget.snap['profilePic']),
             radius: 18,
           ),
           Expanded(
             child: Padding(
-              padding: EdgeInsets.only(left: 16),
+              padding: const EdgeInsets.only(left: 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -33,18 +37,20 @@ class _CommentCardState extends State<CommentCard> {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: 'username ',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          text: '${widget.snap['username']} ',
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        TextSpan(text: 'comments to be added'),
+                        TextSpan(text: widget.snap['text']),
                       ],
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 4),
                     child: Text(
-                      '23/024/23',
-                      style: TextStyle(
+                      DateFormat.yMMMd().format(
+                        widget.snap['datePublished'].toDate(),
+                      ),
+                      style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w400,
                       ),
