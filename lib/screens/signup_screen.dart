@@ -82,10 +82,12 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 32),
           width: double.infinity,
+          height: MediaQuery.of(context).size.height,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -147,7 +149,24 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
               const SizedBox(height: 25),
               ElevatedButton(
-                onPressed: signupUser,
+                onPressed: () {
+                  if (_image == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text('Please upload a profile picture')),
+                    );
+                  } else if (_usernameController.text.isEmpty) {
+                    showSnackbar(context, 'Please enter a username');
+                  } else if (_emailController.text.isEmpty) {
+                    showSnackbar(context, 'Please enter a valid email');
+                  } else if (_passController.text.isEmpty) {
+                    showSnackbar(context, 'Please enter a password');
+                  } else if (_bioController.text.isEmpty) {
+                    showSnackbar(context, 'Please enter bio');
+                  } else {
+                    signupUser();
+                  }
+                },
                 child: Container(
                   decoration: const ShapeDecoration(
                     color: blueColor,

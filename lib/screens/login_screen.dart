@@ -98,7 +98,15 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 25),
               ElevatedButton(
-                onPressed: loginUser,
+                onPressed: () {
+                  if (_emailController.text.isEmpty) {
+                    showSnackbar(context, 'Please enter a valid email');
+                  } else if (_passController.text.isEmpty) {
+                    showSnackbar(context, 'Please enter a valid password');
+                  } else {
+                    loginUser();
+                  }
+                },
                 child: Container(
                   decoration: const ShapeDecoration(
                     color: blueColor,
