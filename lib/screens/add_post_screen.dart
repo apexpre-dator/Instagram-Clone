@@ -103,9 +103,19 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
     return _file == null
         ? Center(
-            child: IconButton(
-              onPressed: () => _selectImage(context),
-              icon: const Icon(Icons.upload),
+            child: GestureDetector(
+              onTap: () => _selectImage(context),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Icon(Icons.upload),
+                  SizedBox(height: 10),
+                  Text(
+                    'Upload Image',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ],
+              ),
             ),
           )
         : Scaffold(
