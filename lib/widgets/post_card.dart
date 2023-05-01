@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart' as Fire;
 import 'package:flutter/material.dart';
 import 'package:instagram_clone/models/user.dart';
 import 'package:instagram_clone/providers/user_provider.dart';
 import 'package:instagram_clone/resources/firestore_methods.dart';
 import 'package:instagram_clone/screens/comment_screen.dart';
+import 'package:instagram_clone/screens/profile_screen.dart';
 import 'package:instagram_clone/utils/colors.dart';
 import 'package:instagram_clone/utils/global_variables.dart';
 import 'package:instagram_clone/utils/utils.dart';
@@ -82,9 +84,18 @@ class _PostCardState extends State<PostCard> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          widget.snap['username'],
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        GestureDetector(
+                          onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => ProfileScreen(
+                                uid: widget.snap['uid'],
+                              ),
+                            ),
+                          ),
+                          child: Text(
+                            widget.snap['username'],
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ],
                     ),
@@ -92,35 +103,38 @@ class _PostCardState extends State<PostCard> {
                 ),
                 IconButton(
                   onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return Dialog(
-                          child: ListView(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shrinkWrap: true,
-                            children: ['Delete']
-                                .map(
-                                  (e) => InkWell(
-                                    onTap: () async {
-                                      FirestoreMethods()
-                                          .deletePost(widget.snap['postId']);
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 12,
-                                        horizontal: 16,
+                    if (widget.snap['uid'] ==
+                        Fire.FirebaseAuth.instance.currentUser!.uid) {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return Dialog(
+                            child: ListView(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              shrinkWrap: true,
+                              children: ['Delete']
+                                  .map(
+                                    (e) => InkWell(
+                                      onTap: () async {
+                                        FirestoreMethods()
+                                            .deletePost(widget.snap['postId']);
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 12,
+                                          horizontal: 16,
+                                        ),
+                                        child: Text(e),
                                       ),
-                                      child: Text(e),
                                     ),
-                                  ),
-                                )
-                                .toList(),
-                          ),
-                        );
-                      },
-                    );
+                                  )
+                                  .toList(),
+                            ),
+                          );
+                        },
+                      );
+                    }
                   },
                   icon: const Icon(Icons.more_vert),
                 ),
