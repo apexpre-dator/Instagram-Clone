@@ -57,6 +57,7 @@ class _FeedScreenState extends State<FeedScreen> {
                   ),
                 )
               : ListView.builder(
+                  reverse: true,
                   itemCount: snapshot.data!.docs.length,
                   itemBuilder: (context, index) => Container(
                     margin: EdgeInsets.symmetric(

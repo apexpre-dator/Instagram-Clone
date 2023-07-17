@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as Fire;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_network/image_network.dart';
 import 'package:instagram_clone/models/user.dart';
 import 'package:instagram_clone/providers/user_provider.dart';
 import 'package:instagram_clone/resources/firestore_methods.dart';
@@ -12,6 +14,7 @@ import 'package:instagram_clone/utils/utils.dart';
 import 'package:instagram_clone/widgets/like_animation.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:image_network/image_network.dart';
 
 class PostCard extends StatefulWidget {
   final snap;
@@ -71,10 +74,18 @@ class _PostCardState extends State<PostCard> {
             ).copyWith(right: 0),
             child: Row(
               children: [
-                CircleAvatar(
-                  radius: 16,
-                  backgroundImage: NetworkImage(widget.snap['profileImage']),
-                ),
+                kIsWeb
+                    ? ImageNetwork(
+                        image: widget.snap['profileImage'],
+                        height: 40,
+                        width: 40,
+                        //fullScreen: true,
+                      )
+                    : CircleAvatar(
+                        radius: 16,
+                        backgroundImage:
+                            NetworkImage(widget.snap['profileImage']),
+                      ),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(
@@ -158,10 +169,17 @@ class _PostCardState extends State<PostCard> {
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.35,
                   width: double.infinity,
-                  child: Image.network(
-                    widget.snap['postUrl'],
-                    fit: BoxFit.fill,
-                  ),
+                  child: kIsWeb
+                      ? ImageNetwork(
+                          image: widget.snap['postUrl'],
+                          height: 300,
+                          width: 600,
+                          //fullScreen: true,
+                        )
+                      : Image.network(
+                          widget.snap['postUrl'],
+                          fit: BoxFit.fill,
+                        ),
                 ),
                 AnimatedOpacity(
                   duration: const Duration(milliseconds: 200),
